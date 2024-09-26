@@ -5,13 +5,14 @@ import Heading from "../../components/Heading";
 import { AiOutlineClose } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { baseApiURL } from "../../baseUrl";
+
 const Timetable = () => {
-  const [addselected, setAddSelected] = useState({
+  const [addSelected, setAddSelected] = useState({
     branch: "",
     semester: "",
   });
-  const [file, setFile] = useState();
-  const [branch, setBranch] = useState();
+  const [file, setFile] = useState(null);
+  const [branch, setBranch] = useState([]);
   const [previewUrl, setPreviewUrl] = useState("");
 
   useEffect(() => {
@@ -32,31 +33,42 @@ const Timetable = () => {
         }
       })
       .catch((error) => {
-        console.error(error);
-        toast.error(error.message);
+        console.error("Error fetching branches:", error);
+        toast.error("Error fetching branches");
       });
   };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    setFile(selectedFile);
-    const imageUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(imageUrl);
+    if (selectedFile) {
+      setFile(selectedFile);
+      const imageUrl = URL.createObjectURL(selectedFile);
+      setPreviewUrl(imageUrl);
+    } else {
+      setFile(null);
+      setPreviewUrl("");
+    }
   };
 
   const addTimetableHandler = () => {
+    if (!file || !addSelected.branch || !addSelected.semester) {
+      toast.error("Please fill all the fields and upload a timetable");
+      return;
+    }
+
     toast.loading("Adding Timetable");
-    const headers = {
-      "Content-Type": "multipart/form-data",
-    };
+
     const formData = new FormData();
-    formData.append("branch", addselected.branch);
-    formData.append("semester", addselected.semester);
+    formData.append("branch", addSelected.branch);
+    formData.append("semester", addSelected.semester);
     formData.append("type", "timetable");
     formData.append("timetable", file);
+
     axios
       .post(`${baseApiURL()}/timetable/addTimetable`, formData, {
-        headers: headers,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((response) => {
         toast.dismiss();
@@ -66,18 +78,21 @@ const Timetable = () => {
             branch: "",
             semester: "",
           });
-          setFile("");
+          setFile(null);
+          setPreviewUrl("");
         } else {
           toast.error(response.data.message);
         }
       })
       .catch((error) => {
         toast.dismiss();
-        console.log("FIle error", error);
-
-        toast.error(error.response.data.message);
+        console.error("File upload error:", error);
+        toast.error(
+          error.response?.data?.message || "Error uploading timetable"
+        );
       });
   };
+
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
       <div className="flex justify-between items-center w-full">
@@ -86,44 +101,51 @@ const Timetable = () => {
       <div className="w-full flex justify-evenly items-center mt-12">
         <div className="w-1/2 flex flex-col justify-center items-center">
           <p className="mb-4 text-xl font-medium">Add Timetable</p>
+
+          {/* Branch selection dropdown */}
           <select
             id="branch"
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
-            value={addselected.branch}
+            value={addSelected.branch}
             onChange={(e) =>
-              setAddSelected({ ...addselected, branch: e.target.value })
+              setAddSelected({ ...addSelected, branch: e.target.value })
             }
           >
-            <option defaultValue>-- Select Branch --</option>
-            {branch &&
-              branch.map((branch) => {
-                return (
-                  <option value={branch.name} key={branch.name}>
-                    {branch.name}
-                  </option>
-                );
-              })}
+            <option value="" disabled selected>
+              -- Select Branch --
+            </option>
+            {branch.length > 0 ? (
+              branch.map((branchItem) => (
+                <option value={branchItem.name} key={branchItem.name}>
+                  {branchItem.name}
+                </option>
+              ))
+            ) : (
+              <option disabled>No Branches Available</option>
+            )}
           </select>
+
+          {/* Semester selection dropdown */}
           <select
+            id="semester"
             onChange={(e) =>
-              setAddSelected({ ...addselected, semester: e.target.value })
+              setAddSelected({ ...addSelected, semester: e.target.value })
             }
-            value={addselected.semester}
-            name="branch"
-            id="branch"
+            value={addSelected.semester}
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
-            <option defaultValue>-- Select Semester --</option>
-            <option value="1">1st Semester</option>
-            <option value="2">2nd Semester</option>
-            <option value="3">3rd Semester</option>
-            <option value="4">4th Semester</option>
-            <option value="5">5th Semester</option>
-            <option value="6">6th Semester</option>
-            <option value="7">7th Semester</option>
-            <option value="8">8th Semester</option>
+            <option value="" disabled selected>
+              -- Select Semester --
+            </option>
+            {[...Array(8).keys()].map((i) => (
+              <option key={i + 1} value={i + 1}>
+                {`${i + 1}${i === 0 ? "st" : i === 1 ? "nd" : "th"} Semester`}
+              </option>
+            ))}
           </select>
-          {!addselected.link && (
+
+          {/* File upload button */}
+          {!file && (
             <label
               htmlFor="upload"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] mt-4 flex justify-center items-center cursor-pointer"
@@ -134,11 +156,13 @@ const Timetable = () => {
               </span>
             </label>
           )}
-          {previewUrl && (
+
+          {/* File remove button */}
+          {file && (
             <p
               className="px-2 border-2 border-blue-500 py-2 rounded text-base w-[80%] mt-4 flex justify-center items-center cursor-pointer"
               onClick={() => {
-                setFile("");
+                setFile(null);
                 setPreviewUrl("");
               }}
             >
@@ -148,22 +172,31 @@ const Timetable = () => {
               </span>
             </p>
           )}
+
+          {/* File input */}
           <input
             type="file"
-            name="upload"
             id="upload"
-            accept="image/*"
             hidden
+            accept="image/*"
             onChange={handleFileChange}
           />
+
+          {/* Submit button */}
           <button
             className="bg-blue-500 text-white mt-8 px-4 py-2 rounded-sm"
             onClick={addTimetableHandler}
           >
             Add Timetable
           </button>
+
+          {/* Timetable preview */}
           {previewUrl && (
-            <img className="mt-6" src={previewUrl} alt="timetable" />
+            <img
+              className="mt-6 h-48 w-48 object-cover rounded"
+              src={previewUrl}
+              alt="Preview of timetable"
+            />
           )}
         </div>
       </div>

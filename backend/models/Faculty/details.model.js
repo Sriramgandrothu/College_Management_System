@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const facultyDetails = new mongoose.Schema({
   employeeId: {
-    type: Number,
+    type: String,
     required: true,
   },
   firstName: {

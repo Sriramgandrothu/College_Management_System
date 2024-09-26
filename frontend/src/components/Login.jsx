@@ -5,12 +5,14 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { baseApiURL } from "../baseUrl";
+
 const Login = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState("Student");
   const { register, handleSubmit } = useForm();
+
   const onSubmit = (data) => {
-    if (data.login !== "" && data.password !== "") {
+    if (data.loginid !== "" && data.password !== "") {
       const headers = {
         "Content-Type": "application/json",
       };
@@ -29,8 +31,10 @@ const Login = () => {
           toast.error(error.response.data.message);
         });
     } else {
+      // Handle empty fields if needed
     }
   };
+
   return (
     <div className="bg-white h-[100vh] w-full flex justify-between items-center">
       <img
@@ -51,10 +55,11 @@ const Login = () => {
               {selected && selected} Login ID
             </label>
             <input
-              type="number"
+              type="text"
               id="eno"
               required
               className="bg-white outline-none border-2 border-gray-400 py-2 px-4 rounded-md w-full focus:border-blue-500"
+              placeholder="Enter your ID" // Placeholder text added
               {...register("loginid")}
             />
           </div>
@@ -67,13 +72,10 @@ const Login = () => {
               id="password"
               required
               className="bg-white outline-none border-2 border-gray-400 py-2 px-4 rounded-md w-full focus:border-blue-500"
+              placeholder="Enter password" // Placeholder text added
               {...register("password")}
             />
           </div>
-          {/* <div className="flex w-[70%] mt-3 justify-start items-center">
-            <input type="checkbox" id="remember" className="accent-blue-500" />{" "}
-            Remember Me
-          </div> */}
           <button className="bg-blue-500 mt-5 text-white px-6 py-2 text-xl rounded-md hover:bg-blue-700 ease-linear duration-300 hover:ease-linear hover:duration-300 hover:transition-all transition-all flex justify-center items-center">
             Login
             <span className="ml-2">

@@ -198,7 +198,8 @@ const EditAdmin = () => {
               Enter Employee Id
             </label>
             <input
-              type="number"
+             disabled
+              type="String"
               id="employeeId"
               value={data.employeeId}
               onChange={(e) => setData({ ...data, employeeId: e.target.value })}

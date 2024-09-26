@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const facultyCredential = new mongoose.Schema({
   loginid: {
-    type: Number,
+    type: String,
     required: true,
   },
   password: {

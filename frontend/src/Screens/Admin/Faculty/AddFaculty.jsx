@@ -163,7 +163,7 @@ const AddFaculty = () => {
           Enter Employee Id
         </label>
         <input
-          type="number"
+          type="String"
           id="employeeId"
           value={data.employeeId}
           onChange={(e) => setData({ ...data, employeeId: e.target.value })}

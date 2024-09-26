@@ -132,7 +132,7 @@ const AddAdmin = () => {
           Enter Employee Id
         </label>
         <input
-          type="number"
+          type="String"
           id="employeeId"
           value={data.employeeId}
           onChange={(e) => setData({ ...data, employeeId: e.target.value })}
@@ -177,6 +177,7 @@ const AddAdmin = () => {
           <option defaultValue>-- Select --</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
+          <option value="Others">Others</option>
         </select>
       </div>
       <div className="w-[40%]">

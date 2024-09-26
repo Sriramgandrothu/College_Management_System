@@ -6,19 +6,21 @@ import { BiArrowBack } from "react-icons/bi";
 import { baseApiURL } from "../../baseUrl";
 
 const Marks = () => {
-  const [subject, setSubject] = useState();
-  const [branch, setBranch] = useState();
-  const [studentData, setStudentData] = useState();
+  const [subject, setSubject] = useState([]);
+  const [branch, setBranch] = useState([]);
+  const [studentData, setStudentData] = useState([]);
   const [selected, setSelected] = useState({
     branch: "",
     semester: "",
     subject: "",
     examType: "",
   });
+
   const loadStudentDetails = () => {
     const headers = {
       "Content-Type": "application/json",
     };
+
     axios
       .post(
         `${baseApiURL()}/student/details/getDetails`,
@@ -41,26 +43,51 @@ const Marks = () => {
   const submitMarksHandler = () => {
     let container = document.getElementById("markContainer");
     container.childNodes.forEach((enroll) => {
-      setStudentMarksHandler(
-        enroll.id,
-        document.getElementById(enroll.id + "marks").value
-      );
+      const marksInput = document.getElementById(`${enroll.id}marks`).value;
+      if (marksInput) {
+        setStudentMarksHandler(enroll.id, marksInput);
+      } else {
+        toast.error(`Marks for enrollment ${enroll.id} cannot be empty.`);
+      }
     });
   };
 
   const setStudentMarksHandler = (enrollment, value) => {
+    if (!value) {
+      toast.error(`Marks for enrollment number ${enrollment} cannot be empty!`);
+      return;
+    }
+
+    const marksValue = parseInt(value, 10); // Convert string input to integer
+
+    // Check marks based on exam type
+    if (selected.examType === "internal" && marksValue > 30) {
+      toast.error(`Internal marks cannot exceed 30 for enrollment ${enrollment}.`);
+      return;
+    }
+
+    if (selected.examType === "external" && marksValue > 70) {
+      toast.error(`External marks cannot exceed 70 for enrollment ${enrollment}.`);
+      return;
+    }
+
     const headers = {
       "Content-Type": "application/json",
     };
+
+    const payload = {
+      enrollmentNo: enrollment,
+      [selected.examType]: {
+        [selected.subject]: marksValue,
+      },
+    };
+
+    console.log('Payload being sent:', payload);  // Debugging log
+
     axios
       .post(
         `${baseApiURL()}/marks/addMarks`,
-        {
-          enrollmentNo: enrollment,
-          [selected.examType]: {
-            [selected.subject]: value,
-          },
-        },
+        payload,
         { headers }
       )
       .then((response) => {
@@ -73,8 +100,8 @@ const Marks = () => {
         }
       })
       .catch((error) => {
-        console.error(error);
-        toast.error(error.message);
+        console.error('Error during API request:', error);
+        toast.error('Error occurred while uploading marks. Please try again.');
       });
   };
 
@@ -98,7 +125,7 @@ const Marks = () => {
   };
 
   const getSubjectData = () => {
-    toast.loading("Loading Subjects");
+    toast.loading("Loading Subjects...");
     axios
       .get(`${baseApiURL()}/subject/getSubject`)
       .then((response) => {
@@ -121,14 +148,14 @@ const Marks = () => {
   }, []);
 
   const resetValueHandler = () => {
-    setStudentData();
+    setStudentData([]);
   };
 
   return (
     <div className="w-full mx-auto flex justify-center items-start flex-col my-10">
       <div className="relative flex justify-between items-center w-full">
         <Heading title={`Upload Marks`} />
-        {studentData && (
+        {studentData.length > 0 && (
           <button
             className="absolute right-2 flex justify-center items-center border-2 border-red-500 px-3 py-2 rounded text-red-500"
             onClick={resetValueHandler}
@@ -140,7 +167,7 @@ const Marks = () => {
           </button>
         )}
       </div>
-      {!studentData && (
+      {studentData.length === 0 && (
         <>
           <div className="mt-10 w-full flex justify-evenly items-center gap-x-6">
             <div className="w-full">

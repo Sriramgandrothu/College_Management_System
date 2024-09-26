@@ -11,7 +11,7 @@ const adminDetails = new mongoose.Schema({
   },
   middleName: {
     type: String,
-    required: true,
+    // required: true,
   },
   lastName: {
     type: String,

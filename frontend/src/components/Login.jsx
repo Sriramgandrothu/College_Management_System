@@ -43,6 +43,8 @@ const Login = () => {
         alt=""
       />
       <div className="w-[40%] flex justify-center items-start flex-col pl-8">
+       <p className="text-4xl font-bold text-blue-600 mb-4">Welcome to the SRKR College Portal ✨👋</p>
+       <br />
         <p className="text-3xl font-semibold pb-2 border-b-2 border-green-500">
           {selected && selected} Login
         </p>
@@ -72,7 +74,7 @@ const Login = () => {
               id="password"
               required
               className="bg-white outline-none border-2 border-gray-400 py-2 px-4 rounded-md w-full focus:border-blue-500"
-              placeholder="Enter password" // Placeholder text added
+              placeholder="••••••••••" // Placeholder text added
               {...register("password")}
             />
           </div>

@@ -102,14 +102,16 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello {data[0].firstName} {data[0].middleName} {data[0].lastName}{" "}
+              Hello  {data[0].middleName} {data[0].lastName} {data[0].firstName}{" "}
               👋
             </p>
             <div className="mt-3">
               <p className="text-lg font-normal mb-2">
                 Employee Id: {data[0].employeeId}
               </p>
-              <p className="text-lg font-normal mb-2">Post: {data[0].post}</p>
+              <p className="text-lg font-normal mb-2">
+                <strong>Post: {data[0].post} </strong>
+                </p>
               <p className="text-lg font-normal mb-2">
                 Email Id: {data[0].email}
               </p>
@@ -119,6 +121,10 @@ const Profile = () => {
               <p className="text-lg font-normal mb-2">
                 Department: {data[0].department}
               </p>
+              <p className="text-lg font-normal mb-2">
+                Experience: {data[0].experience}
+              </p>
+              <p className="text-lg font-normal mb-2">Role: {router.state.type}</p>
             </div>
             <button
               className={`${

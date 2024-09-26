@@ -103,7 +103,7 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello {data.firstName} {data.middleName} {data.lastName} 👋
+              Hello  {data.middleName} {data.lastName} {data.firstName} 👋
             </p>
             <div className="mt-3">
               <p className="text-lg font-normal mb-2">
@@ -115,6 +115,7 @@ const Profile = () => {
               <p className="text-lg font-normal mb-2">
                 Email Address: {data.email}
               </p>
+              <p className="text-lg font-normal mb-2">Role: {router.state.type}</p>
             </div>
             <button
               className={`${

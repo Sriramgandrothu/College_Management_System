@@ -24,8 +24,3 @@ const timetableSchema = new mongoose.Schema({
   },
 });
 
-<<<<<<< HEAD
-module.exports = mongoose.model("Timetable", TimeTable);
-=======
-module.exports = mongoose.model("Timetable", timetableSchema);
->>>>>>> 0ec52ea674343633dd2883846137a2a3a28402b5

@@ -198,7 +198,8 @@ const EditAdmin = () => {
               Enter Employee Id
             </label>
             <input
-              type="number"
+             disabled
+              type="String"
               id="employeeId"
               value={data.employeeId}
               onChange={(e) => setData({ ...data, employeeId: e.target.value })}
@@ -259,7 +260,7 @@ const EditAdmin = () => {
           htmlFor="file"
           className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full flex justify-center items-center cursor-pointer"
         >
-          Upload
+          Select New Profile
           <span className="ml-2">
             <FiUpload />
           </span>
@@ -281,7 +282,7 @@ const EditAdmin = () => {
         type="submit"
         className="bg-blue-500 px-6 py-3 rounded-sm my-6 text-white"
       >
-        Update
+        Update Details
       </button>
         </form>
       )}

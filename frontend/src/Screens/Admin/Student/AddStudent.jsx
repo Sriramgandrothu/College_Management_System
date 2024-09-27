@@ -5,8 +5,8 @@ import { baseApiURL } from "../../../baseUrl";
 import { FiUpload } from "react-icons/fi";
 
 const AddStudent = () => {
-  const [file, setFile] = useState(null); // Initialize as null
-  const [branch, setBranch] = useState([]);
+  const [file, setFile] = useState();
+  const [branch, setBranch] = useState();
   const [previewImage, setPreviewImage] = useState("");
   const [data, setData] = useState({
     enrollmentNo: "",
@@ -19,7 +19,6 @@ const AddStudent = () => {
     branch: "",
     gender: "",
   });
-
   const getBranchData = () => {
     const headers = {
       "Content-Type": "application/json",
@@ -51,9 +50,10 @@ const AddStudent = () => {
 
   const addStudentProfile = (e) => {
     e.preventDefault();
-    toast.loading("Adding Student...");
-
-    // FormData for file and other student data
+    toast.loading("Adding Student");
+    const headers = {
+      "Content-Type": "multipart/form-data",
+    };
     const formData = new FormData();
     formData.append("enrollmentNo", data.enrollmentNo);
     formData.append("firstName", data.firstName);
@@ -65,55 +65,53 @@ const AddStudent = () => {
     formData.append("branch", data.branch);
     formData.append("gender", data.gender);
     formData.append("type", "profile");
-    
-    if (file) {
-      formData.append("profile", file); // Append file only if selected
-    }
-
-    const headers = {
-      "Content-Type": "multipart/form-data",
-    };
-
-    // Add student details
+    formData.append("profile", file);
     axios
-      .post(`${baseApiURL()}/student/details/addDetails`, formData, { headers })
+      .post(`${baseApiURL()}/student/details/addDetails`, formData, {
+        headers: headers,
+      })
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
           toast.success(response.data.message);
-          // Register the student
-          return axios.post(`${baseApiURL()}/student/auth/register`, {
-            loginid: data.enrollmentNo,
-            password: data.enrollmentNo,
-          });
-        } else {
-          throw new Error(response.data.message);
-        }
-      })
-      .then((response) => {
-        if (response.data.success) {
-          toast.success("Student registered successfully.");
-          // Reset form and file state
-          setFile(null);
-          setData({
-            enrollmentNo: "",
-            firstName: "",
-            middleName: "",
-            lastName: "",
-            email: "",
-            phoneNumber: "",
-            semester: "",
-            branch: "",
-            gender: "",
-          });
-          setPreviewImage("");
+          axios
+            .post(`${baseApiURL()}/student/auth/register`, {
+              loginid: data.enrollmentNo,
+              password: data.enrollmentNo,
+            })
+            .then((response) => {
+              toast.dismiss();
+              if (response.data.success) {
+                toast.success(response.data.message);
+                setFile();
+                setData({
+                  enrollmentNo: "",
+                  firstName: "",
+                  middleName: "",
+                  lastName: "",
+                  email: "",
+                  phoneNumber: "",
+                  semester: "",
+                  branch: "",
+                  gender: "",
+                  profile: "",
+                });
+                setPreviewImage();
+              } else {
+                toast.error(response.data.message);
+              }
+            })
+            .catch((error) => {
+              toast.dismiss();
+              toast.error(error.response.data.message);
+            });
         } else {
           toast.error(response.data.message);
         }
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response?.data?.message || error.message);
+        toast.error(error.response.data.message);
       });
   };
 
@@ -134,7 +132,6 @@ const AddStudent = () => {
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="middlename" className="leading-7 text-sm ">
           Enter Middle Name
@@ -147,7 +144,6 @@ const AddStudent = () => {
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="lastname" className="leading-7 text-sm ">
           Enter Last Name
@@ -160,20 +156,18 @@ const AddStudent = () => {
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="enrollmentNo" className="leading-7 text-sm ">
           Enter Enrollment No
         </label>
         <input
-          type="text"
+          type="String"
           id="enrollmentNo"
           value={data.enrollmentNo}
           onChange={(e) => setData({ ...data, enrollmentNo: e.target.value })}
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="email" className="leading-7 text-sm ">
           Enter Email Address
@@ -186,7 +180,6 @@ const AddStudent = () => {
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="phoneNumber" className="leading-7 text-sm ">
           Enter Phone Number
@@ -199,7 +192,6 @@ const AddStudent = () => {
           className="w-full bg-blue-50 rounded border focus:border-dark-green focus:bg-secondary-light focus:ring-2 focus:ring-light-green text-base outline-none py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
         />
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="semester" className="leading-7 text-sm ">
           Select Semester
@@ -210,7 +202,7 @@ const AddStudent = () => {
           value={data.semester}
           onChange={(e) => setData({ ...data, semester: e.target.value })}
         >
-          <option value="">-- Select --</option>
+          <option defaultValue>-- Select --</option>
           <option value="1">1st Semester</option>
           <option value="2">2nd Semester</option>
           <option value="3">3rd Semester</option>
@@ -221,7 +213,6 @@ const AddStudent = () => {
           <option value="8">8th Semester</option>
         </select>
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="branch" className="leading-7 text-sm ">
           Select Branch
@@ -232,15 +223,16 @@ const AddStudent = () => {
           value={data.branch}
           onChange={(e) => setData({ ...data, branch: e.target.value })}
         >
-          <option value="">-- Select --</option>
-          {branch?.map((branch) => (
-            <option value={branch.name} key={branch.name}>
-              {branch.name}
-            </option>
-          ))}
+          <option defaultValue>-- Select --</option>
+          {branch?.map((branch) => {
+            return (
+              <option value={branch.name} key={branch.name}>
+                {branch.name}
+              </option>
+            );
+          })}
         </select>
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="gender" className="leading-7 text-sm ">
           Select Gender
@@ -251,13 +243,11 @@ const AddStudent = () => {
           value={data.gender}
           onChange={(e) => setData({ ...data, gender: e.target.value })}
         >
-          <option value="">-- Select --</option>
+          <option defaultValue>-- Select --</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
-          <option value="Other">Other</option>
         </select>
       </div>
-
       <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
           Select Profile
@@ -288,7 +278,7 @@ const AddStudent = () => {
         type="submit"
         className="bg-blue-500 px-6 py-3 rounded-sm mb-6 text-white"
       >
-        Submit
+        Add New Student
       </button>
     </form>
   );

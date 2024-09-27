@@ -206,7 +206,7 @@ const EditFaculty = () => {
             </label>
             <input
               disabled
-              type="number"
+              type="String"
               id="employeeId"
               value={data.employeeId}
               onChange={(e) => setData({ ...data, employeeId: e.target.value })}
@@ -265,7 +265,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
-          Select Profile
+          Select New Profile
         </label>
         <label
           htmlFor="file"
@@ -293,7 +293,7 @@ const EditFaculty = () => {
         type="submit"
         className="bg-blue-500 px-6 py-3 rounded-sm my-6 text-white"
       >
-        Update
+        Update Details
       </button>
         </form>
       )}

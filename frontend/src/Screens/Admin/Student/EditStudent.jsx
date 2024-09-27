@@ -228,7 +228,7 @@ const EditStudent = () => {
             </label>
             <input
               disabled
-              type="number"
+              type="Text"
               id="enrollmentNo"
               value={data.enrollmentNo}
               onChange={(e) =>
@@ -321,7 +321,7 @@ const EditStudent = () => {
             </select>
           </div>
           <div className="w-[40%]">
-            <label htmlFor="file" className="leading-7 text-sm ">
+            <label htmlFor="file" className="leading-7 text-sm " disabled>
               Select New Profile
             </label>
             <label

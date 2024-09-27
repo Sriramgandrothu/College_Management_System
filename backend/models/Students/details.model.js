@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const studentDetails = new mongoose.Schema({
   enrollmentNo: {
-    type: Number,
+    type: String,
     required: true,
   },
   firstName: {
@@ -11,7 +11,7 @@ const studentDetails = new mongoose.Schema({
   },
   middleName: {
     type: String,
-    required: true,
+    // required: true,
   },
   lastName: {
     type: String,

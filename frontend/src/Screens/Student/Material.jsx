@@ -5,12 +5,10 @@ import { IoMdLink } from "react-icons/io";
 import { HiOutlineCalendar, HiOutlineSearch } from "react-icons/hi";
 import toast from "react-hot-toast";
 import { baseApiURL } from "../../baseUrl";
-
 const Material = () => {
   const [subject, setSubject] = useState();
   const [selected, setSelected] = useState();
   const [material, setMaterial] = useState([]);
-
   useEffect(() => {
     toast.loading("Loading Subjects");
     axios
@@ -43,17 +41,16 @@ const Material = () => {
         if (response.data.success) {
           setMaterial(response.data.material);
         } else {
-          toast.error(response.data.message);
+          // Error
         }
       })
       .catch((error) => {
         console.error(error);
-        toast.error(error.message);
       });
   };
 
   const onSelectChangeHandler = (e) => {
-    setMaterial([]);
+    setMaterial();
     setSelected(e.target.value);
   };
 
@@ -73,11 +70,13 @@ const Material = () => {
               -- Select Subject --
             </option>
             {subject &&
-              subject.map((item) => (
-                <option value={item.name} key={item.name}>
-                  {item.name}
-                </option>
-              ))}
+              subject.map((item) => {
+                return (
+                  <option value={item.name} key={item.name}>
+                    {item.name}
+                  </option>
+                );
+              })}
           </select>
           <button
             onClick={getSubjectMaterial}
@@ -88,63 +87,48 @@ const Material = () => {
         </div>
         <div className="mt-8 w-full">
           {material &&
-            material.reverse().map((item, index) => (
-              <div
-                key={index}
-                className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 relative mb-4"
-              >
-                <p
-                  className={`text-xl font-medium flex justify-start items-center ${
-                    item.link && "cursor-pointer"
-                  } group`}
-                  onClick={() =>
-                    item.link &&
-                    window.open(
-                      process.env.REACT_APP_MEDIA_LINK + "/" + item.link
-                    )
-                  }
+            material.reverse().map((item, index) => {
+              return (
+                <div
+                  key={index}
+                  className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 relative mb-4"
                 >
-                  {item.title}{" "}
-                  {item.link && (
-                    <span className="text-2xl group-hover:text-blue-500 ml-1">
-                      <IoMdLink />
-                    </span>
-                  )}
-                </p>
-                <p className="text-base font-normal mt-1">
-                  {item.subject} - {item.faculty}
-                </p>
-                <p className="text-sm absolute top-4 right-4 flex justify-center items-center">
-                  <span className="text-base mr-1">
-                    <HiOutlineCalendar />
-                  </span>{" "}
-                  {item.createdAt.split("T")[0].split("-")[2] +
-                    "/" +
-                    item.createdAt.split("T")[0].split("-")[1] +
-                    "/" +
-                    item.createdAt.split("T")[0].split("-")[0] +
-                    " " +
-                    item.createdAt.split("T")[1].split(".")[0]}
-                </p>
-                {item.link && (
-                  <a
-                    href={process.env.REACT_APP_MEDIA_LINK + "/" + item.link}
-                    download
-                    className="mt-2 inline-block bg-green-500 text-white py-2 px-4 rounded-sm"
-                    onClick={(e) => {
-                      const downloadUrl = process.env.REACT_APP_MEDIA_LINK + "/" + item.link;
-                      console.log("Download URL:", downloadUrl); // Log the URL for debugging
-                      if (!item.link) {
-                        e.preventDefault(); // Prevent default action if link is not valid
-                        toast.error("Invalid download link.");
-                      }
-                    }}
+                  <p
+                    className={`text-xl font-medium flex justify-start items-center ${
+                      item.link && "cursor-pointer"
+                    } group`}
+                    onClick={() =>
+                      item.link &&
+                      window.open(
+                        process.env.REACT_APP_MEDIA_LINK + "/" + item.link
+                      )
+                    }
                   >
-                    View
-                  </a>
-                )}
-              </div>
-            ))}
+                    {item.title}{" "}
+                    {item.link && (
+                      <span className="text-2xl group-hover:text-blue-500 ml-1">
+                        <IoMdLink />
+                      </span>
+                    )}
+                  </p>
+                  <p className="text-base font-normal mt-1">
+                    {item.subject} - {item.faculty}
+                  </p>
+                  <p className="text-sm absolute top-4 right-4 flex justify-center items-center">
+                    <span className="text-base mr-1">
+                      <HiOutlineCalendar />
+                    </span>{" "}
+                    {item.createdAt.split("T")[0].split("-")[2] +
+                      "/" +
+                      item.createdAt.split("T")[0].split("-")[1] +
+                      "/" +
+                      item.createdAt.split("T")[0].split("-")[0] +
+                      " " +
+                      item.createdAt.split("T")[1].split(".")[0]}
+                  </p>
+                </div>
+              );
+            })}
           {material && material.length === 0 && selected && (
             <p className="text-center">No Material For {selected}!</p>
           )}

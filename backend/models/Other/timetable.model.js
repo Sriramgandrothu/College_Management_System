@@ -1,27 +1,18 @@
 const mongoose = require("mongoose");
 
-const timetableSchema = new mongoose.Schema({
-
-  branch: {
-    type: String,
-    required: true,
-  },
+const TimeTable = new mongoose.Schema({
   link: {
     type: String,
     required: true,
   },
-  semester: {
+  branch: {
     type: String,
     required: true,
   },
-  file: {
-    type: String, // Store the filename (or full path if you prefer)
+  semester: {
+    type: Number,
     required: true,
-  },
-  uploadedAt: {
-    type: Date,
-    default: Date.now,
-  },
-});
+  }
+}, { timestamps: true });
 
-module.exports = mongoose.model("Timetable", timetableSchema);
+module.exports = mongoose.model("Timetable", TimeTable);

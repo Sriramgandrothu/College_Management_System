@@ -1,5 +1,5 @@
 const express = require("express");
-const { getSubject, addSubject, deleteSubject } = require("../../controllers/Other/subject.controller");
+const { getSubject, addSubject, deleteSubject } = require("../../controllers/Other/subject.controller"); 
 const router = express.Router();
 
 router.get("/getSubject", getSubject);

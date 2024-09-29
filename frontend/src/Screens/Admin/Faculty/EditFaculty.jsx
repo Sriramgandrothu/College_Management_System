@@ -166,7 +166,7 @@ const EditFaculty = () => {
         >
           <div className="w-[40%]">
             <label htmlFor="firstname" className="leading-7 text-sm ">
-              Enter First Name
+              Enter First Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -178,7 +178,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="middlename" className="leading-7 text-sm ">
-              Enter Middle Name
+              Enter Middle Name <span className="text-red-600">(Optional)</span>
             </label>
             <input
               type="text"
@@ -190,7 +190,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="lastname" className="leading-7 text-sm ">
-              Enter Last Name
+              Enter Last Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -202,7 +202,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="employeeId" className="leading-7 text-sm ">
-              Enter Employee Id
+              Enter Employee Id <span className="text-red-600">*</span>
             </label>
             <input
               disabled
@@ -215,7 +215,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="phoneNumber" className="leading-7 text-sm ">
-              Enter Phone Number
+              Enter Phone Number <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
@@ -229,7 +229,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="email" className="leading-7 text-sm ">
-              Enter Email Address
+              Enter Email Address <span className="text-red-600">*</span>
             </label>
             <input
               type="email"
@@ -241,7 +241,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="post" className="leading-7 text-sm ">
-              POST
+              POST <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -253,7 +253,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="experience" className="leading-7 text-sm ">
-              Experience
+              Experience <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
@@ -265,7 +265,7 @@ const EditFaculty = () => {
           </div>
           <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
-          Select New Profile
+          Select New Profile <span className="text-red-600">*</span>
         </label>
         <label
           htmlFor="file"

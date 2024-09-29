@@ -26,6 +26,12 @@ const AddAdmin = () => {
 
   const addAdminProfile = (e) => {
     e.preventDefault();
+    
+    if (!data.employeeId || !data.firstName || !data.lastName || !data.email || !data.phoneNumber || !data.gender || !file) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+    
     toast.loading("Adding Admin");
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -40,6 +46,7 @@ const AddAdmin = () => {
     formData.append("gender", data.gender);
     formData.append("type", "profile");
     formData.append("profile", file);
+
     axios
       .post(`${baseApiURL()}/admin/details/addDetails`, formData, {
         headers: headers,
@@ -66,7 +73,6 @@ const AddAdmin = () => {
                   email: "",
                   phoneNumber: "",
                   gender: "",
-                  profile: "",
                 });
               } else {
                 toast.error(response.data.message);
@@ -74,7 +80,7 @@ const AddAdmin = () => {
             })
             .catch((error) => {
               toast.dismiss();
-              toast.error(error.response.data.message);
+              toast.error(`${error.response.data.message}\n${error.message}`);
             });
         } else {
           toast.error(response.data.message);
@@ -82,7 +88,7 @@ const AddAdmin = () => {
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(`${error.response?.data?.message || "Internal error"}\n${error.message}`);
       });
   };
 
@@ -93,7 +99,7 @@ const AddAdmin = () => {
     >
       <div className="w-[40%]">
         <label htmlFor="firstname" className="leading-7 text-sm ">
-          Enter First Name
+          Enter First Name <span className="text-red-600">*</span>
         </label>
         <input
           type="text"
@@ -105,7 +111,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="middlename" className="leading-7 text-sm ">
-          Enter Middle Name
+          Enter Middle Name <span className="text-red-600">(Optional)</span>
         </label>
         <input
           type="text"
@@ -117,7 +123,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="lastname" className="leading-7 text-sm ">
-          Enter Last Name
+          Enter Last Name <span className="text-red-600">*</span>
         </label>
         <input
           type="text"
@@ -129,10 +135,10 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="employeeId" className="leading-7 text-sm ">
-          Enter Employee Id
+          Enter Employee Id <span className="text-red-600">*</span>
         </label>
         <input
-          type="String"
+          type="text"
           id="employeeId"
           value={data.employeeId}
           onChange={(e) => setData({ ...data, employeeId: e.target.value })}
@@ -141,7 +147,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="email" className="leading-7 text-sm ">
-          Enter Email Address
+          Enter Email Address <span className="text-red-600">*</span>
         </label>
         <input
           type="email"
@@ -153,7 +159,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="phoneNumber" className="leading-7 text-sm ">
-          Enter Phone Number
+          Enter Phone Number <span className="text-red-600">*</span>
         </label>
         <input
           type="number"
@@ -165,7 +171,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="gender" className="leading-7 text-sm ">
-          Select Gender
+          Select Gender <span className="text-red-600">*</span>
         </label>
         <select
           id="gender"
@@ -173,7 +179,6 @@ const AddAdmin = () => {
           value={data.gender}
           onChange={(e) => setData({ ...data, gender: e.target.value })}
         >
-          {" "}
           <option defaultValue>-- Select --</option>
           <option value="Male">Male</option>
           <option value="Female">Female</option>
@@ -182,7 +187,7 @@ const AddAdmin = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
-          Select Profile
+          Select Profile <span className="text-red-600">*</span>
         </label>
         <label
           htmlFor="file"

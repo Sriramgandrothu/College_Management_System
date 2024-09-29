@@ -92,7 +92,7 @@ const Branch = () => {
             }border-blue-500 px-4 py-2 text-black rounded-sm mr-6`}
             onClick={() => setSelected("add")}
           >
-            Add Branch
+            Add Branch 
           </button>
           <button
             className={`${
@@ -108,7 +108,7 @@ const Branch = () => {
         <div className="flex flex-col justify-center items-center w-full mt-8">
           <div className="w-[40%]">
             <label htmlFor="name" className="leading-7 text-sm ">
-              Enter Branch Name
+              Enter Branch Name <span className="text-red-600">*</span>
             </label>
             <input
               type="name"

@@ -159,7 +159,7 @@ const EditAdmin = () => {
         >
           <div className="w-[40%]">
             <label htmlFor="firstname" className="leading-7 text-sm ">
-              Enter First Name
+              Enter First Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -171,7 +171,7 @@ const EditAdmin = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="middlename" className="leading-7 text-sm ">
-              Enter Middle Name
+              Enter Middle Name <span className="text-red-600">(Optional)</span>
             </label>
             <input
               type="text"
@@ -183,7 +183,7 @@ const EditAdmin = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="lastname" className="leading-7 text-sm ">
-              Enter Last Name
+              Enter Last Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -195,7 +195,7 @@ const EditAdmin = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="employeeId" className="leading-7 text-sm ">
-              Enter Employee Id
+              Enter Employee Id <span className="text-red-600">*</span>
             </label>
             <input
              disabled
@@ -208,7 +208,7 @@ const EditAdmin = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="email" className="leading-7 text-sm ">
-              Enter Email Address
+              Enter Email Address <span className="text-red-600">*</span>
             </label>
             <input
               type="email"
@@ -220,7 +220,7 @@ const EditAdmin = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="phoneNumber" className="leading-7 text-sm ">
-              Enter Phone Number
+              Enter Phone Number <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
@@ -235,7 +235,7 @@ const EditAdmin = () => {
 
           <div className="w-[40%]">
             <label htmlFor="gender" className="leading-7 text-sm ">
-              Select Gender
+              Select Gender <span className="text-red-600">*</span>
             </label>
             <select
               id="gender"
@@ -254,7 +254,7 @@ const EditAdmin = () => {
 
           <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
-          Select Profile
+          Select Profile <span className="text-red-600">*</span>
         </label>
         <label
           htmlFor="file"

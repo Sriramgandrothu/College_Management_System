@@ -105,7 +105,7 @@ const Subjects = () => {
         <div className="flex flex-col justify-center items-center w-full mt-8">
           <div className="w-[40%] mb-4">
             <label htmlFor="code" className="leading-7 text-sm">
-              Enter Subject Code
+              Enter Subject Code <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
@@ -117,7 +117,7 @@ const Subjects = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="name" className="leading-7 text-sm ">
-              Enter Subject Name
+              Enter Subject Name <span className="text-red-600">*</span>
             </label>
             <input
               type="name"

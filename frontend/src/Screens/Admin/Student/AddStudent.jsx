@@ -50,6 +50,10 @@ const AddStudent = () => {
 
   const addStudentProfile = (e) => {
     e.preventDefault();
+    if (!data.enrollmentNo || !data.firstName || !data.lastName || !data.email || !data.phoneNumber || !data.semester || !data.branch|| !data.gender || !file) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
     toast.loading("Adding Student");
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -122,7 +126,7 @@ const AddStudent = () => {
     >
       <div className="w-[40%]">
         <label htmlFor="firstname" className="leading-7 text-sm ">
-          Enter First Name
+          Enter First Name <span className="text-red-600">*</span>
         </label>
         <input
           type="text"
@@ -134,7 +138,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="middlename" className="leading-7 text-sm ">
-          Enter Middle Name
+          Enter Middle Name <span className="text-red-600">(Optional)</span>
         </label>
         <input
           type="text"
@@ -146,7 +150,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="lastname" className="leading-7 text-sm ">
-          Enter Last Name
+          Enter Last Name <span className="text-red-600">*</span>
         </label>
         <input
           type="text"
@@ -158,7 +162,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="enrollmentNo" className="leading-7 text-sm ">
-          Enter Register No
+          Enter Register No <span className="text-red-600">*</span>
         </label>
         <input
           type="String"
@@ -170,7 +174,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="email" className="leading-7 text-sm ">
-          Enter Email Address
+          Enter Email Address <span className="text-red-600">*</span>
         </label>
         <input
           type="email"
@@ -182,7 +186,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="phoneNumber" className="leading-7 text-sm ">
-          Enter Phone Number
+          Enter Phone Number <span className="text-red-600">*</span>
         </label>
         <input
           type="number"
@@ -194,7 +198,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="semester" className="leading-7 text-sm ">
-          Select Semester
+          Select Semester <span className="text-red-600">*</span>
         </label>
         <select
           id="semester"
@@ -215,7 +219,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="branch" className="leading-7 text-sm ">
-          Select Year,Branch & Section
+          Select Year,Branch & Section <span className="text-red-600">*</span>
         </label>
         <select
           id="branch"
@@ -235,7 +239,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="gender" className="leading-7 text-sm ">
-          Select Gender
+          Select Gender <span className="text-red-600">*</span>
         </label>
         <select
           id="gender"
@@ -250,7 +254,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="file" className="leading-7 text-sm ">
-          Select Profile
+          Select Profile <span className="text-red-600">*</span>
         </label>
         <label
           htmlFor="file"

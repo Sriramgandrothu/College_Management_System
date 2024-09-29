@@ -1,5 +1,5 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { setUserData } from "../../redux/actions";
@@ -38,6 +38,40 @@ const Profile = () => {
               branch: userData.branch,
             })
           );
+
+          // Determine the time of day and show a greeting toast
+          const currentHour = new Date().getHours();
+          let greeting = "Hello";
+          let greeting2 = "Welcome to the Portal";
+          let emoji = "👋";
+
+          if (currentHour >= 5 && currentHour < 12) {
+            greeting = "Good Morning";
+            emoji = "☀️";
+          } else if (currentHour >= 12 && currentHour < 18) {
+            greeting = "Good Afternoon";
+            emoji = "🌞";
+          } else if (currentHour >= 18 && currentHour < 21) {
+            greeting = "Good Evening";
+            emoji = "🌇";
+          } else {
+            greeting = "Good Night";
+            emoji = "🌙";
+          }
+
+          
+          toast(`Hi 👋! ${greeting}, ${userData.lastName}! ${greeting2} ${emoji}`, {
+            position: "bottom-right",
+            icon: null,
+            style: {
+              padding: '12px',         
+              fontSize: '16px',        
+              backgroundColor: '#6c757d', 
+              color: '#f8f9fa',        
+              borderRadius: '8px',    
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', 
+            },
+          });
         } else {
           toast.error(response.data.message);
         }
@@ -103,7 +137,7 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello  {data.middleName} {data.lastName} {data.firstName} 👋
+              Hello {data.middleName} {data.lastName} {data.firstName} 👋
             </p>
             <div className="mt-3">
               <p className="text-lg font-normal mb-2">
@@ -115,7 +149,9 @@ const Profile = () => {
               <p className="text-lg font-normal mb-2">
                 Email Address: {data.email}
               </p>
-              <p className="text-lg font-normal mb-2">Role: {router.state.type}</p>
+              <p className="text-lg font-normal mb-2">
+                Role: {router.state.type}
+              </p>
             </div>
             <button
               className={`${
@@ -157,7 +193,6 @@ const Profile = () => {
               </form>
             )}
           </div>
-          {/* Ensure the image URL is correctly formed */}
           <img
             src={`${process.env.REACT_APP_MEDIA_LINK}/${data.profile}`}
             alt="student profile"

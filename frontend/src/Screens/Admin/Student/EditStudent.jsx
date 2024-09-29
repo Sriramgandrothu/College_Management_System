@@ -188,7 +188,7 @@ const EditStudent = () => {
         >
           <div className="w-[40%]">
             <label htmlFor="firstname" className="leading-7 text-sm ">
-              Enter First Name
+              Enter First Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -200,7 +200,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="middlename" className="leading-7 text-sm ">
-              Enter Middle Name
+              Enter Middle Name <span className="text-red-600">(Optional)</span>
             </label>
             <input
               type="text"
@@ -212,7 +212,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="lastname" className="leading-7 text-sm ">
-              Enter Last Name
+              Enter Last Name <span className="text-red-600">*</span>
             </label>
             <input
               type="text"
@@ -224,7 +224,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="enrollmentNo" className="leading-7 text-sm ">
-              Enrollment No
+              Enrollment No <span className="text-red-600">*</span>
             </label>
             <input
               disabled
@@ -239,7 +239,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="email" className="leading-7 text-sm ">
-              Enter Email Address
+              Enter Email Address <span className="text-red-600">*</span>
             </label>
             <input
               type="email"
@@ -251,7 +251,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="phoneNumber" className="leading-7 text-sm ">
-              Enter Phone Number
+              Enter Phone Number <span className="text-red-600">*</span>
             </label>
             <input
               type="number"
@@ -265,7 +265,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="semester" className="leading-7 text-sm ">
-              Semester
+              Semester <span className="text-red-600">*</span>
             </label>
             <select
               disabled
@@ -287,7 +287,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="branch" className="leading-7 text-sm ">
-              Branch
+              Branch <span className="text-red-600">*</span>
             </label>
             <select
               disabled
@@ -308,8 +308,8 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="gender" className="leading-7 text-sm ">
-              Select Gender
-            </label>
+              Select Gender <span className="text-red-600">*</span>
+            </label> 
             <select
               id="gender"
               className="px-2 bg-blue-50 py-3 rounded-sm text-base w-full accent-blue-700 mt-1"
@@ -322,7 +322,7 @@ const EditStudent = () => {
           </div>
           <div className="w-[40%]">
             <label htmlFor="file" className="leading-7 text-sm " disabled>
-              Select New Profile
+              Select New Profile <span className="text-red-600">*</span>
             </label>
             <label
               htmlFor="file"

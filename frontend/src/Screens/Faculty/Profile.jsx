@@ -5,6 +5,7 @@ import { baseApiURL } from "../../baseUrl";
 import { toast } from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../../redux/actions";
+
 const Profile = () => {
   const [showPass, setShowPass] = useState(false);
   const router = useLocation();
@@ -14,6 +15,7 @@ const Profile = () => {
     new: "",
     current: "",
   });
+
   useEffect(() => {
     const headers = {
       "Content-Type": "application/json",
@@ -35,6 +37,40 @@ const Profile = () => {
               employeeId: response.data.user[0].employeeId,
             })
           );
+
+          // Determine the time of day and show a greeting toast
+          const currentHour = new Date().getHours();
+          let greeting = "Hello";
+          let greeting2 = "Welcome to the Portal";
+          let emoji = "👋";
+
+          if (currentHour >= 5 && currentHour < 12) {
+            greeting = "Good Morning";
+            emoji = "☀️";
+          } else if (currentHour >= 12 && currentHour < 18) {
+            greeting = "Good Afternoon";
+            emoji = "🌞";
+          } else if (currentHour >= 18 && currentHour < 21) {
+            greeting = "Good Evening";
+            emoji = "🌇";
+          } else {
+            greeting = "Good Night";
+            emoji = "🌙";
+          }
+
+          // Show the toast with the user's last name, bottom-right corner, larger size
+          toast(`Hi 👋! ${greeting}, ${response.data.user[0].lastName}! ${greeting2} ${emoji}`, {
+            position: "bottom-right",
+            icon: null, // No icon at the start
+            style: {
+              padding: '12px',         // Reduced padding
+              fontSize: '16px',        // Smaller text
+              backgroundColor: '#6c757d', // Updated background color
+              color: '#f8f9fa',        // Updated text color
+              borderRadius: '8px',     // Rounded corners
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Shadow for better UI
+            },
+          });
         } else {
           toast.error(response.data.message);
         }
@@ -42,7 +78,7 @@ const Profile = () => {
       .catch((error) => {
         console.error(error);
       });
-  }, [router.state.loginid, router.state.type]);
+  }, [router.state.loginid, router.state.type, dispatch]);
 
   const checkPasswordHandler = (e) => {
     e.preventDefault();
@@ -102,7 +138,7 @@ const Profile = () => {
         <>
           <div>
             <p className="text-2xl font-semibold">
-              Hello  {data[0].middleName} {data[0].lastName} {data[0].firstName}{" "}
+              Hello {data[0].middleName} {data[0].lastName} {data[0].firstName}{" "}
               👋
             </p>
             <div className="mt-3">
@@ -110,8 +146,8 @@ const Profile = () => {
                 Employee Id: {data[0].employeeId}
               </p>
               <p className="text-lg font-normal mb-2">
-                <strong>Post: {data[0].post} </strong>
-                </p>
+                <strong>Post: {data[0].post}</strong>
+              </p>
               <p className="text-lg font-normal mb-2">
                 Email Id: {data[0].email}
               </p>

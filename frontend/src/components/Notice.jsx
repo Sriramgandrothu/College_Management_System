@@ -51,7 +51,7 @@ const Notice = () => {
     } catch (error) {
       if (router.pathname !== "/student") {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(`Internal Error\n${error.response.data.message}`);
       }
     }
   }, [router.pathname]);
@@ -88,7 +88,7 @@ const Notice = () => {
                 })
                 .catch((error) => {
                   toast.dismiss();
-                  toast.error(error.response.data.message);
+                  toast.error(`Internal Error\n${error.response.data.message}`);
                 });
               toast.dismiss(t.id); // Dismiss the confirmation toast
             }}
@@ -129,7 +129,7 @@ const Notice = () => {
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(`Internal Error\n${error.response.data.message}`);
       });
   };
 
@@ -152,7 +152,7 @@ const Notice = () => {
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(`Internal Error\n${error.response.data.message}`);
       });
   };
 
@@ -265,56 +265,51 @@ const Notice = () => {
             <input
               type="text"
               id="title"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              className="bg-blue-50 py-1 border border-blue-400 w-full rounded-md mt-1 mb-4"
               value={data.title}
               onChange={(e) => setData({ ...data, title: e.target.value })}
-              placeholder="Enter notice title"
+              required
             />
           </div>
-          <div className="w-[40%] mt-4">
-            <label htmlFor="description">Notice Description</label>
+          <div className="w-[40%] mt-2">
+            <label htmlFor="description">Description</label>
             <textarea
               id="description"
-              cols="30"
-              rows="4"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              className="bg-blue-50 py-1 border border-blue-400 w-full rounded-md mt-1 mb-4"
               value={data.description}
               onChange={(e) => setData({ ...data, description: e.target.value })}
-              placeholder="Enter notice description"
+              required
             />
           </div>
-          <div className="w-[40%] mt-4">
-            <label htmlFor="link">Notice Link (Optional)</label>
+          <div className="w-[40%] mt-2">
+            <label htmlFor="link">Link (optional)</label>
             <input
               type="text"
               id="link"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              className="bg-blue-50 py-1 border border-blue-400 w-full rounded-md mt-1 mb-4"
               value={data.link}
               onChange={(e) => setData({ ...data, link: e.target.value })}
-              placeholder="Enter notice link"
             />
           </div>
-          <div className="w-[40%] mt-4">
-            <label htmlFor="type">Notice Type</label>
+          <div className="w-[40%] mt-2">
+            <label htmlFor="type">Type</label>
             <select
               id="type"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              className="bg-blue-50 py-1 border border-blue-400 w-full rounded-md mt-1 mb-4"
               value={data.type}
               onChange={(e) => setData({ ...data, type: e.target.value })}
             >
-              <option value="student">Students</option>
+              <option value="student">Student</option>
               <option value="faculty">Faculty</option>
               <option value="both">Both</option>
             </select>
           </div>
-          <div className="mt-4">
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600"
-            >
-              {edit ? "Update Notice" : "Add Notice"}
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+          >
+            {edit ? "Update Notice" : "Add Notice"}
+          </button>
         </form>
       )}
     </div>

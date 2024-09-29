@@ -50,47 +50,85 @@ const Timetable = () => {
     }
   };
 
-  const addTimetableHandler = () => {
+  const confirmUpload = () => {
+    return new Promise((resolve, reject) => {
+      const id = toast(
+        (t) => (
+          <span>
+            Confirm upload of timetable?
+            <div className="mt-2 flex justify-end">
+              <button
+                className="bg-blue-500 text-white px-4 py-1 mr-2 rounded-sm"
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  resolve(true);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className="bg-gray-300 px-4 py-1 rounded-sm"
+                onClick={() => {
+                  toast.dismiss(t.id);
+                  reject();
+                }}
+              >
+                No
+              </button>
+            </div>
+          </span>
+        ),
+        { duration: Infinity }
+      );
+    });
+  };
+
+  const addTimetableHandler = async () => {
     if (!file || !addSelected.branch || !addSelected.semester) {
       toast.error("Please fill all the fields and upload a timetable");
       return;
     }
 
-    toast.loading("Adding Timetable");
+    try {
+      await confirmUpload();
+      toast.loading("Adding Timetable");
 
-    const formData = new FormData();
-    formData.append("branch", addSelected.branch);
-    formData.append("semester", addSelected.semester);
-    formData.append("type", "timetable");
-    formData.append("timetable", file);
+      const formData = new FormData();
+      formData.append("branch", addSelected.branch);
+      formData.append("semester", addSelected.semester);
+      formData.append("type", "timetable");
+      formData.append("timetable", file);
 
-    axios
-      .post(`${baseApiURL()}/timetable/addTimetable`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          setAddSelected({
-            branch: "",
-            semester: "",
-          });
-          setFile(null);
-          setPreviewUrl("");
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        console.error("File upload error:", error);
-        toast.error(
-          error.response?.data?.message || "Error uploading timetable"
-        );
-      });
+      axios
+        .post(`${baseApiURL()}/timetable/addTimetable`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          toast.dismiss();
+          if (response.data.success) {
+            toast.success(response.data.message);
+            setAddSelected({
+              branch: "",
+              semester: "",
+            });
+            setFile(null);
+            setPreviewUrl("");
+          } else {
+            toast.error(response.data.message);
+          }
+        })
+        .catch((error) => {
+          toast.dismiss();
+          console.error("File upload error:", error);
+          toast.error(
+            error.response?.data?.message || "Error uploading timetable"
+          );
+        });
+    } catch {
+      toast.error("Timetable upload cancelled");
+    }
   };
 
   return (

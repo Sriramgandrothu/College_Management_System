@@ -7,10 +7,12 @@ import { AiOutlineClose } from "react-icons/ai";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { baseApiURL } from "../../baseUrl";
+
 const Material = () => {
   const { fullname } = useSelector((state) => state.userData);
   const [subject, setSubject] = useState();
   const [file, setFile] = useState();
+  const [filePreview, setFilePreview] = useState(null);
   const [selected, setSelected] = useState({
     title: "",
     subject: "",
@@ -35,7 +37,46 @@ const Material = () => {
       });
   }, []);
 
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile);
+
+    // Generate PDF preview URL
+    if (selectedFile) {
+      const fileUrl = URL.createObjectURL(selectedFile);
+      setFilePreview(fileUrl);
+    }
+  };
+
   const addMaterialHandler = () => {
+    toast(
+      (t) => (
+        <span>
+          Are you sure you want to upload this material?
+          <div className="mt-2">
+            <button
+              className="bg-green-500 text-white px-4 py-1 rounded mr-2"
+              onClick={() => {
+                toast.dismiss(t.id);
+                uploadMaterial();
+              }}
+            >
+              Yes
+            </button>
+            <button
+              className="bg-red-500 text-white px-4 py-1 rounded"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              No
+            </button>
+          </div>
+        </span>
+      ),
+      { duration: 6000 }
+    );
+  };
+
+  const uploadMaterial = () => {
     toast.loading("Adding Material");
     const headers = {
       "Content-Type": "multipart/form-data",
@@ -60,6 +101,7 @@ const Material = () => {
             faculty: fullname.split(" ")[0] + " " + fullname.split(" ")[2],
           });
           setFile("");
+          setFilePreview(null); // Reset file preview
         } else {
           toast.error(response.data.message);
         }
@@ -69,6 +111,7 @@ const Material = () => {
         toast.error(error.response.data.message);
       });
   };
+
   return (
     <div className="w-full mx-auto mt-10 flex justify-center items-start flex-col mb-10">
       <div className="flex justify-between items-center w-full">
@@ -112,6 +155,7 @@ const Material = () => {
                 })}
             </select>
           </div>
+
           {!selected.link && (
             <label
               htmlFor="upload"
@@ -123,6 +167,7 @@ const Material = () => {
               </span>
             </label>
           )}
+
           {selected.link && (
             <p
               className="px-2 border-2 border-blue-500 py-2 rounded text-base w-[80%] mt-4 flex justify-center items-center cursor-pointer"
@@ -139,8 +184,21 @@ const Material = () => {
             name="upload"
             id="upload"
             hidden
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={handleFileChange}
           />
+
+          {/* PDF Preview */}
+          {filePreview && (
+            <div className="w-[80%] mt-4">
+              <label>Material Preview:</label>
+              <iframe
+                src={filePreview}
+                title="Material Preview"
+                className="w-full h-64 mt-2 border"
+              />
+            </div>
+          )}
+
           <button
             className="bg-blue-500 text-white mt-8 px-4 py-2 rounded-sm"
             onClick={addMaterialHandler}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react"; // Import useCallback
+import React, { useEffect, useState, useCallback } from "react";
 import Heading from "./Heading";
 import axios from "axios";
 import { IoMdLink } from "react-icons/io";
@@ -27,61 +27,89 @@ const Notice = () => {
     let role;
 
     if (router.pathname === "/student") {
-        role = "student";
+      role = "student";
     } else if (router.pathname === "/faculty") {
-        role = "faculty"; // Ensure this is set correctly
+      role = "faculty";
     } else if (router.pathname === "/admin") {
-        role = "admin";
+      role = "admin";
     }
 
     const headers = { "Content-Type": "application/json" };
 
     try {
-        const response = await axios.get(`${baseApiURL()}/notice/getNotice`, {
-            params: { role },
-            headers
-        });
-        if (response.data.success) {
-            setNotice(response.data.notices);
-        } else {
-            if (router.pathname !== "/student") {
-                toast.error(response.data.message);
-            }
-        }
-    } catch (error) {
+      const response = await axios.get(`${baseApiURL()}/notice/getNotice`, {
+        params: { role },
+        headers,
+      });
+      if (response.data.success) {
+        setNotice(response.data.notices);
+      } else {
         if (router.pathname !== "/student") {
-            toast.dismiss();
-            toast.error(error.response.data.message);
+          toast.error(response.data.message);
         }
+      }
+    } catch (error) {
+      if (router.pathname !== "/student") {
+        toast.dismiss();
+        toast.error(error.response.data.message);
+      }
     }
-}, [router.pathname]);
-
+  }, [router.pathname]);
 
   useEffect(() => {
     getNoticeHandler();
-  }, [getNoticeHandler]); // Add getNoticeHandler to the dependency array
+  }, [getNoticeHandler]);
 
   const addNoticeHandler = (e) => {
     e.preventDefault();
-    toast.loading("Adding Notice");
-    const headers = { "Content-Type": "application/json" };
 
-    axios
-      .post(`${baseApiURL()}/notice/addNotice`, data, { headers })
-      .then((response) => {
-        toast.dismiss();
-        if (response.data.success) {
-          toast.success(response.data.message);
-          getNoticeHandler();
-          openHandler();
-        } else {
-          toast.error(response.data.message);
-        }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
+    // Confirmation toast
+    toast(
+      (t) => (
+        <div>
+          <p>Are you posting it to the correct role?</p>
+          <button
+          className="bg-green-500 text-white px-4 py-1 rounded mr-2"
+            onClick={() => {
+              toast.loading("Adding Notice");
+              const headers = { "Content-Type": "application/json" };
+
+              axios
+                .post(`${baseApiURL()}/notice/addNotice`, data, { headers })
+                .then((response) => {
+                  toast.dismiss();
+                  if (response.data.success) {
+                    toast.success("Notice added successfully!");
+                    getNoticeHandler();
+                    openHandler();
+                  } else {
+                    toast.error(response.data.message);
+                  }
+                })
+                .catch((error) => {
+                  toast.dismiss();
+                  toast.error(error.response.data.message);
+                });
+              toast.dismiss(t.id); // Dismiss the confirmation toast
+            }}
+          >
+            Yes
+          </button>
+          <button
+            className="bg-red-500 text-white px-4 py-1 rounded"
+            onClick={() => {
+              toast.dismiss(t.id); // Dismiss the confirmation toast
+              toast.error("Correct the notice and update it again.");
+            }}
+          >
+            No
+          </button>
+        </div>
+      ),
+      {
+        duration: Infinity,
+      }
+    );
   };
 
   const deleteNoticeHandler = (id) => {
@@ -93,7 +121,7 @@ const Notice = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          toast.success(response.data.message);
+          toast.success("Notice deleted successfully!");
           getNoticeHandler();
         } else {
           toast.error(response.data.message);
@@ -107,6 +135,7 @@ const Notice = () => {
 
   const updateNoticeHandler = (e) => {
     e.preventDefault();
+    toast.loading("Updating Notice");
     const headers = { "Content-Type": "application/json" };
 
     axios
@@ -114,7 +143,7 @@ const Notice = () => {
       .then((response) => {
         toast.dismiss();
         if (response.data.success) {
-          toast.success(response.data.message);
+          toast.success("Notice updated successfully!");
           getNoticeHandler();
           openHandler();
         } else {
@@ -146,8 +175,8 @@ const Notice = () => {
   };
 
   return (
-    <div className="w-full mx-auto flex justify-center items-start flex-col my-10">
-      <div className="relative flex justify-between items-center w-full">
+    <div className="w-full mx-auto flex justify-center items-start flex-col my-10 px-4 lg:px-0">
+      <div className="relative flex justify-between items-center w-full mb-4">
         <Heading title="Notices" />
         {(router.pathname === "/faculty" || router.pathname === "/admin") && (
           <button
@@ -177,7 +206,7 @@ const Notice = () => {
           {notice.map((item, index) => (
             <div
               key={item._id}
-              className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 mb-4 relative"
+              className="border-blue-500 border-2 w-full rounded-md shadow-sm py-4 px-6 mb-4 relative bg-white"
             >
               {(router.pathname === "/faculty" || router.pathname === "/admin") && (
                 <div className="absolute flex justify-center items-center right-4 bottom-3">
@@ -214,11 +243,15 @@ const Notice = () => {
                 <span className="text-base mr-1">
                   <HiOutlineCalendar />
                 </span>
-                {new Date(item.createdAt).toLocaleDateString() + " " + new Date(item.createdAt).toLocaleTimeString()}
+                {new Date(item.createdAt).toLocaleDateString() +
+                  " " +
+                  new Date(item.createdAt).toLocaleTimeString()}
               </p>
               {router.pathname === "/student" && (
                 <span className="text-sm bg-yellow-500 px-2 py-1 rounded-full absolute top-4 left-4 text-white">
-                  {item.type.includes("student") ? "For Students" : "For Both"}
+                  {item.type.includes("student")
+                    ? "For Students"
+                    : "For Both Students and Faculty"}
                 </span>
               )}
             </div>
@@ -235,6 +268,7 @@ const Notice = () => {
               className="bg-blue-50 py-2 px-4 w-full mt-1"
               value={data.title}
               onChange={(e) => setData({ ...data, title: e.target.value })}
+              placeholder="Enter notice title"
             />
           </div>
           <div className="w-[40%] mt-4">
@@ -243,40 +277,44 @@ const Notice = () => {
               id="description"
               cols="30"
               rows="4"
-              className="bg-blue-50 py-2 px-4 w-full mt-1 resize-none"
+              className="bg-blue-50 py-2 px-4 w-full mt-1"
               value={data.description}
               onChange={(e) => setData({ ...data, description: e.target.value })}
+              placeholder="Enter notice description"
             />
           </div>
           <div className="w-[40%] mt-4">
-            <label htmlFor="type">Type</label>
-            <select
-              id="type"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
-              value={data.type}
-              onChange={(e) => setData({ ...data, type: e.target.value })}
-            >
-              <option value="student">Student</option>
-              <option value="faculty">Faculty</option>
-              <option value="both">Both</option>
-            </select>
-          </div>
-          <div className="w-[40%] mt-4">
-            <label htmlFor="link">Link (Optional)</label>
+            <label htmlFor="link">Notice Link (Optional)</label>
             <input
               type="text"
               id="link"
               className="bg-blue-50 py-2 px-4 w-full mt-1"
               value={data.link}
               onChange={(e) => setData({ ...data, link: e.target.value })}
+              placeholder="Enter notice link"
             />
           </div>
-          <button
-            type="submit"
-            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-          >
-            {edit ? "Update Notice" : "Add Notice"}
-          </button>
+          <div className="w-[40%] mt-4">
+            <label htmlFor="type">Notice Type</label>
+            <select
+              id="type"
+              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              value={data.type}
+              onChange={(e) => setData({ ...data, type: e.target.value })}
+            >
+              <option value="student">Students</option>
+              <option value="faculty">Faculty</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+          <div className="mt-4">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-4 py-2 rounded shadow-md hover:bg-blue-600"
+            >
+              {edit ? "Update Notice" : "Add Notice"}
+            </button>
+          </div>
         </form>
       )}
     </div>

@@ -1,0 +1,17 @@
+[33ma462acf[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: commit: Test-Update_Notice
+[33mec35433[m HEAD@{1}: commit (merge): Test-Update-Srii
+[33mf9b0893[m HEAD@{2}: commit: Test-Update-Sri
+[33mcc72ed5[m HEAD@{3}: commit: Test-Update1
+[33mb619c0c[m HEAD@{4}: reset: moving to HEAD~5
+[33m0ec52ea[m HEAD@{5}: pull --tags origin main: Fast-forward
+[33m561d87e[m HEAD@{6}: reset: moving to HEAD~2
+[33m0ec52ea[m HEAD@{7}: commit: Test-7
+[33m1a73f63[m HEAD@{8}: commit: Test-6
+[33m561d87e[m HEAD@{9}: commit: Test-5
+[33m53412e9[m HEAD@{10}: commit: Test-4
+[33m31aea54[m HEAD@{11}: reset: moving to HEAD@{3}
+[33mb619c0c[m HEAD@{12}: reset: moving to HEAD~1
+[33m31aea54[m HEAD@{13}: reset: moving to HEAD~1
+[33m9719c66[m HEAD@{14}: commit: Test-3
+[33m31aea54[m HEAD@{15}: commit: Test-2
+[33mb619c0c[m HEAD@{16}: commit (initial): Test-1

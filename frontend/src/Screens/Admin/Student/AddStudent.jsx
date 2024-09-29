@@ -158,7 +158,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="enrollmentNo" className="leading-7 text-sm ">
-          Enter Enrollment No
+          Enter Register No
         </label>
         <input
           type="String"
@@ -215,7 +215,7 @@ const AddStudent = () => {
       </div>
       <div className="w-[40%]">
         <label htmlFor="branch" className="leading-7 text-sm ">
-          Select Branch
+          Select Year,Branch & Section
         </label>
         <select
           id="branch"

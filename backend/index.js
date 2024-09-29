@@ -4,16 +4,16 @@ const cors = require("cors");
 const path = require("path");
 
 const app = express();
-connectToMongo(); // Ensure your DB connection works correctly
+connectToMongo();
 
 const port = process.env.PORT || 5000;
 
 // CORS Configuration
 app.use(cors({
-  origin: process.env.FRONTEND_API_LINK || 'http://localhost:3000' // Defaulting to localhost if environment variable is missing
+  origin: process.env.FRONTEND_API_LINK || 'http://localhost:3000'
 }));
 
-app.use(express.json()); // For parsing application/json
+app.use(express.json());
 
 app.get("/", (req, res) => {
   res.send("Hello 👋 I am Working Fine 🚀");
@@ -35,7 +35,7 @@ app.use("/api/admin/details", require("./routes/Admin Api/details.route"));
 app.use("/api/timetable", require("./routes/Other Api/timetable.route"));
 app.use("/api/material", require("./routes/Other Api/material.route"));
 app.use("/api/notice", require("./routes/Other Api/notice.route"));
-app.use("/api/subject", require("./routes/Other Api/subject.route")); // Correct path to your subject route
+app.use("/api/subject", require("./routes/Other Api/subject.route"));
 app.use("/api/marks", require("./routes/Other Api/marks.route"));
 app.use("/api/branch", require("./routes/Other Api/branch.route"));
 

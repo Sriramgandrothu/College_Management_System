@@ -122,7 +122,7 @@ const Profile = () => {
               </p>
               <p className="text-lg font-normal mb-2">Role: {router.state.type}</p>
             </div>
-            <button
+            {/* <button
               className={`${
                 showPass ? "bg-red-100 text-red-600" : "bg-blue-600 text-white"
               }  px-3 py-1 rounded mt-4`}
@@ -161,7 +161,7 @@ const Profile = () => {
                   Change Password
                 </button>
               </form>
-            )}
+            )} */}
           </div>
           <img
             src={process.env.REACT_APP_MEDIA_LINK + "/" + data.profile}

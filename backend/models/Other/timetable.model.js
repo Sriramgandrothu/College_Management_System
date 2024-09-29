@@ -1,12 +1,7 @@
 const mongoose = require("mongoose");
 
 const timetableSchema = new mongoose.Schema({
-
   branch: {
-    type: String,
-    required: true,
-  },
-  link: {
     type: String,
     required: true,
   },
@@ -14,8 +9,8 @@ const timetableSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  file: {
-    type: String, // Store the filename (or full path if you prefer)
+  link: {
+    type: String,
     required: true,
   },
   uploadedAt: {
@@ -24,3 +19,6 @@ const timetableSchema = new mongoose.Schema({
   },
 });
 
+const Timetable = mongoose.model("Timetable", timetableSchema);
+
+module.exports = Timetable;

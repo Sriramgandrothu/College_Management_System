@@ -117,14 +117,12 @@ const Material = () => {
                 <p className="text-sm absolute top-4 right-4 flex justify-center items-center">
                   <span className="text-base mr-1">
                     <HiOutlineCalendar />
-                  </span>{" "}
-                  {item.createdAt.split("T")[0].split("-")[2] +
-                    "/" +
-                    item.createdAt.split("T")[0].split("-")[1] +
-                    "/" +
-                    item.createdAt.split("T")[0].split("-")[0] +
-                    " " +
-                    item.createdAt.split("T")[1].split(".")[0]}
+                  </span>
+                  {(() => {
+                    const date = new Date(item.createdAt);
+                    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+                    return date.toLocaleString('en-GB', options); // Adjust the locale if needed
+                  })()}
                 </p>
                 {item.link && (
                   <a

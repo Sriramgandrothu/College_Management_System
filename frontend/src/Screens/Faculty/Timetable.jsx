@@ -111,7 +111,7 @@ const Timetable = () => {
               setAddSelected({ ...addSelected, branch: e.target.value })
             }
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               -- Select Branch --
             </option>
             {branch.length > 0 ? (
@@ -134,7 +134,7 @@ const Timetable = () => {
             value={addSelected.semester}
             className="px-2 bg-blue-50 py-3 rounded-sm text-base w-[80%] accent-blue-700 mt-4"
           >
-            <option value="" disabled selected>
+            <option value="" disabled>
               -- Select Semester --
             </option>
             {[...Array(8).keys()].map((i) => (

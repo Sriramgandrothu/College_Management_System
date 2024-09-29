@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react"; // Import useCallback
 import Heading from "./Heading";
 import axios from "axios";
 import { IoMdLink } from "react-icons/io";
@@ -23,46 +23,45 @@ const Notice = () => {
     link: "",
   });
 
-  const getNoticeHandler = () => {
-    let types;
+  const getNoticeHandler = useCallback(async () => {
+    let role;
 
     if (router.pathname === "/student") {
-      types = ["student", "both"]; // Only student notices for students
+        role = "student";
     } else if (router.pathname === "/faculty") {
-      types = ["faculty","student", "both"]; // Faculty can see notices for both faculty and students
+        role = "faculty"; // Ensure this is set correctly
     } else if (router.pathname === "/admin") {
-      types = ["faculty", "student", "both"]; // Admin can see all notices
+        role = "admin";
     }
 
     const headers = { "Content-Type": "application/json" };
 
-    axios
-      .get(`${baseApiURL()}/notice/getNotice`, { headers, params: { type: types } })
-      .then((response) => {
+    try {
+        const response = await axios.get(`${baseApiURL()}/notice/getNotice`, {
+            params: { role },
+            headers
+        });
         if (response.data.success) {
-          // Filter notices based on the user role
-          const filteredNotices = response.data.notice.filter((item) => {
-            if (router.pathname === "/student") {
-              return item.type === "student" || item.type === "both"; // Students see only student and both notices
-            }
-            return true; // Other roles see all notices
-          });
-          setNotice(filteredNotices);
+            setNotice(response.data.notices);
         } else {
-          toast.error(response.data.message);
+            if (router.pathname !== "/student") {
+                toast.error(response.data.message);
+            }
         }
-      })
-      .catch((error) => {
-        toast.dismiss();
-        toast.error(error.response.data.message);
-      });
-  };
+    } catch (error) {
+        if (router.pathname !== "/student") {
+            toast.dismiss();
+            toast.error(error.response.data.message);
+        }
+    }
+}, [router.pathname]);
+
 
   useEffect(() => {
     getNoticeHandler();
-  }, [router.pathname]);
+  }, [getNoticeHandler]); // Add getNoticeHandler to the dependency array
 
-  const addNoticehandler = (e) => {
+  const addNoticeHandler = (e) => {
     e.preventDefault();
     toast.loading("Adding Notice");
     const headers = { "Content-Type": "application/json" };
@@ -85,7 +84,7 @@ const Notice = () => {
       });
   };
 
-  const deleteNoticehandler = (id) => {
+  const deleteNoticeHandler = (id) => {
     toast.loading("Deleting Notice");
     const headers = { "Content-Type": "application/json" };
 
@@ -106,7 +105,7 @@ const Notice = () => {
       });
   };
 
-  const updateNoticehandler = (e) => {
+  const updateNoticeHandler = (e) => {
     e.preventDefault();
     const headers = { "Content-Type": "application/json" };
 
@@ -183,11 +182,11 @@ const Notice = () => {
               {(router.pathname === "/faculty" || router.pathname === "/admin") && (
                 <div className="absolute flex justify-center items-center right-4 bottom-3">
                   <span className="text-sm bg-blue-500 px-4 py-1 text-white rounded-full">
-                    {item.type}
+                    {item.type.join(", ")}
                   </span>
                   <span
                     className="text-2xl group-hover:text-blue-500 ml-2 cursor-pointer hover:text-red-500"
-                    onClick={() => deleteNoticehandler(item._id)}
+                    onClick={() => deleteNoticeHandler(item._id)}
                   >
                     <MdDeleteOutline />
                   </span>
@@ -217,10 +216,9 @@ const Notice = () => {
                 </span>
                 {new Date(item.createdAt).toLocaleDateString() + " " + new Date(item.createdAt).toLocaleTimeString()}
               </p>
-              {/* Indicate notice type for students */}
               {router.pathname === "/student" && (
                 <span className="text-sm bg-yellow-500 px-2 py-1 rounded-full absolute top-4 left-4 text-white">
-                  {item.type === "student" ? "For Students" : "For Faculty and Students"}
+                  {item.type.includes("student") ? "For Students" : "For Both"}
                 </span>
               )}
             </div>
@@ -228,7 +226,7 @@ const Notice = () => {
         </div>
       )}
       {open && (
-        <form className="mt-8 w-full" onSubmit={edit ? updateNoticehandler : addNoticehandler}>
+        <form className="mt-8 w-full" onSubmit={edit ? updateNoticeHandler : addNoticeHandler}>
           <div className="w-[40%] mt-2">
             <label htmlFor="title">Notice Title</label>
             <input
@@ -251,17 +249,7 @@ const Notice = () => {
             />
           </div>
           <div className="w-[40%] mt-4">
-            <label htmlFor="link">Link (Optional)</label>
-            <input
-              type="text"
-              id="link"
-              className="bg-blue-50 py-2 px-4 w-full mt-1"
-              value={data.link}
-              onChange={(e) => setData({ ...data, link: e.target.value })}
-            />
-          </div>
-          <div className="w-[40%] mt-4">
-            <label htmlFor="type">Select Audience Type:</label>
+            <label htmlFor="type">Type</label>
             <select
               id="type"
               className="bg-blue-50 py-2 px-4 w-full mt-1"
@@ -273,11 +261,22 @@ const Notice = () => {
               <option value="both">Both</option>
             </select>
           </div>
-          <div className="w-[40%] mt-8">
-            <button className="w-full bg-blue-500 py-2 text-white rounded">
-              {edit ? "Update Notice" : "Add Notice"}
-            </button>
+          <div className="w-[40%] mt-4">
+            <label htmlFor="link">Link (Optional)</label>
+            <input
+              type="text"
+              id="link"
+              className="bg-blue-50 py-2 px-4 w-full mt-1"
+              value={data.link}
+              onChange={(e) => setData({ ...data, link: e.target.value })}
+            />
           </div>
+          <button
+            type="submit"
+            className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+          >
+            {edit ? "Update Notice" : "Add Notice"}
+          </button>
         </form>
       )}
     </div>

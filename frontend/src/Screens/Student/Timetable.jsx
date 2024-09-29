@@ -8,7 +8,7 @@ import { baseApiURL } from "../../baseUrl";
 
 const Timetable = () => {
   const [timetable, setTimetable] = useState("");
-  const userData = useSelector((state) => state.userData);
+  const userData = useSelector((state) => state.userData); // Assuming userData has branch and semester
 
   useEffect(() => {
     const getTimetable = () => {
@@ -31,11 +31,14 @@ const Timetable = () => {
           headers: headers,
         })
         .then((response) => {
-          console.log("API Response:", response.data); // Log the entire response
+          console.log("API Response Data:", response.data); // Check the data returned by the API
 
+          // Check if the response is valid and contains timetable information
           if (response.data && Array.isArray(response.data)) {
             const timetableEntry = response.data.find(
-              (entry) => entry.semester === userData.semester && entry.branch === userData.branch
+              (entry) =>
+                entry.semester.toString() === userData.semester.toString() &&
+                entry.branch.toLowerCase() === userData.branch.toLowerCase()
             );
 
             if (timetableEntry) {
@@ -77,7 +80,7 @@ const Timetable = () => {
           </p>
         )}
       </div>
-      
+
       {timetable ? (
         <img
           className="mt-8 rounded-lg shadow-md w-[70%] mx-auto"

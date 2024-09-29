@@ -2,89 +2,79 @@ const Notice = require("../../models/Other/notice.model");
 
 const getNotice = async (req, res) => {
     try {
-        const { role } = req.body; // Assuming role is passed in the request body
+        const { role } = req.query; // Use req.query instead of req.body
         let notices;
 
+        // Fetch notices based on user role
         if (role === "student") {
-            // Students should only see notices meant for students
             notices = await Notice.find({ type: { $in: ["student", "both"] } });
         } else if (role === "faculty") {
-            /// Faculty should see all notices
+            // Faculty should see notices for faculty and students
             notices = await Notice.find({});
         } else if (role === "admin") {
-            // Admin should see all notices
             notices = await Notice.find({});
         } else {
-            // If role is not recognized, return an error
             return res.status(400).json({ success: false, message: "Invalid role!" });
         }
 
-        if (notices.length > 0) {
-            res.json({ success: true, message: "Notices retrieved successfully", notices });
-        } else {
-            res.status(404).json({ success: false, message: "No notices available!" });
-        }
+        return res.json({ success: true, message: "Notices retrieved successfully", notices });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
 
+
+
 const addNotice = async (req, res) => {
-    let { link, description, title, type } = req.body;
     try {
-        let noticeExists = await Notice.findOne({ link, description, title, type });
-        if (noticeExists) {
-            return res.status(400).json({ success: false, message: "Notice already exists!" });
+        const { title, description, type, link } = req.body;
+
+        // Ensure type is a single string, not an array
+        if (Array.isArray(type)) {
+            return res.status(400).json({ success: false, message: "Type must be a single string value." });
         }
 
-        // Determine visibility based on type
-        let typesToSave;
-        if (type === "student") {
-            typesToSave = ["student", "both"];
-        } else if (type === "faculty") {
-            typesToSave = ["faculty", "student","both"];
-        } else {
-            typesToSave = [type];
-        }
-
-        await Notice.create({
-            link,
-            description,
+        const newNotice = new Notice({
             title,
-            type: typesToSave, // Save multiple types
+            description,
+            type, // Make sure this is a string
+            link,
         });
-        res.json({ success: true, message: "Notice added successfully" });
+
+        await newNotice.save();
+        res.status(201).json({ success: true, message: "Notice added successfully", notice: newNotice });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
 
 const updateNotice = async (req, res) => {
-    let { link, description, title, type } = req.body;
     try {
-        let notice = await Notice.findByIdAndUpdate(req.params.id, { link, description, title, type }, { new: true });
+        const { link, description, title, type } = req.body;
+        const notice = await Notice.findByIdAndUpdate(req.params.id, { link, description, title, type }, { new: true });
+        
         if (!notice) {
-            return res.status(400).json({ success: false, message: "No notice available!" });
+            return res.status(404).json({ success: false, message: "Notice not found!" });
         }
-        res.json({ success: true, message: "Notice updated successfully" });
+        return res.json({ success: true, message: "Notice updated successfully", notice });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
 
 const deleteNotice = async (req, res) => {
     try {
-        let notice = await Notice.findByIdAndDelete(req.params.id);
+        const notice = await Notice.findByIdAndDelete(req.params.id);
         if (!notice) {
-            return res.status(400).json({ success: false, message: "No notice available!" });
+            return res.status(404).json({ success: false, message: "Notice not found!" });
         }
-        res.json({ success: true, message: "Notice deleted successfully" });
+        return res.json({ success: true, message: "Notice deleted successfully" });
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        console.error(error);
+        return res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
 

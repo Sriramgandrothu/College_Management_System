@@ -3,13 +3,8 @@ const path = require("path");
 
 // File filter to restrict file types
 const fileFilter = (req, file, cb) => {
-  // Accept PNG, JPEG/JPG for images, and PDF for materials
-  if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "application/pdf"
-  ) {
+  const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+  if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error("Invalid file type. Only PNG, JPG, and PDF files are allowed."), false);
@@ -18,36 +13,41 @@ const fileFilter = (req, file, cb) => {
 
 // Storage configuration
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(__dirname, "../../media")); // Use absolute path for cross-environment compatibility
+  destination: (req, file, cb) => {
+    cb(null, path.join(__dirname, "../media"));
   },
-  filename: function (req, file, cb) {
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
     let filename = "";
-    const ext = path.extname(file.originalname); // Extract original file extension
 
-    if (req.body?.type === "timetable") {
-      filename = `Timetable_${req.body.semester}_Semester_${req.body.branch}${ext}`;
-    } else if (req.body?.type === "profile") {
-      if (req.body.enrollmentNo) {
-        filename = `Student_Profile_${req.body.enrollmentNo}_Semester_${req.body.branch}${ext}`;
-      } else {
-        filename = `Faculty_Profile_${req.body.employeeId}${ext}`;
-      }
-    } else if (req.body?.type === "material") {
-      filename = `${req.body.title}_Subject_${req.body.subject}.pdf`; // Assuming material will always be a PDF
+    switch (req.body.type) {
+      case "timetable":
+        filename = `Timetable_${req.body.semester}_Semester_${req.body.branch}${ext}`;
+        break;
+      case "profile":
+        filename = req.body.enrollmentNo 
+          ? `Student_Profile_${req.body.enrollmentNo}_Semester_${req.body.branch}${ext}` 
+          : `Faculty_Profile_${req.body.employeeId}${ext}`;
+        break;
+      case "material":
+        filename = `${req.body.title}_Subject_${req.body.subject}.pdf`;
+        break;
+      default:
+        cb(new Error("Invalid file type specified."), false);
+        return;
     }
 
     cb(null, filename);
-  }
+  },
 });
 
 // Configure multer with storage and file filtering
-const upload = multer({ 
-  storage: storage,
-  fileFilter: fileFilter,  // Ensuring only allowed file types are uploaded
+const upload = multer({
+  storage,
+  fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 10 // 10MB file size limit (adjust as needed)
-  }
+    fileSize: 1024 * 1024 * 10, // 10MB file size limit
+  },
 });
 
 module.exports = upload;

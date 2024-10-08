@@ -10,6 +10,8 @@ import { BiArrowBack } from "react-icons/bi";
 import toast from "react-hot-toast";
 import { baseApiURL } from "../baseUrl";
 
+
+
 const Notice = () => {
   const router = useLocation();
   const [notice, setNotice] = useState([]);

@@ -48,10 +48,10 @@ const Profile = () => {
           if (currentHour >= 5 && currentHour < 12) {
             greeting = "Good Morning";
             emoji = "☀️";
-          } else if (currentHour >= 12 && currentHour < 18) {
+          } else if (currentHour >= 12 && currentHour < 17) {
             greeting = "Good Afternoon";
             emoji = "🌞";
-          } else if (currentHour >= 18 && currentHour < 21) {
+          } else if (currentHour >= 17 && currentHour < 21) {
             greeting = "Good Evening";
             emoji = "🌇";
           } else {

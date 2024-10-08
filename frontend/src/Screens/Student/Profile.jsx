@@ -49,10 +49,10 @@ const Profile = () => {
           if (currentHour >= 5 && currentHour < 12) {
             greeting = "Good Morning";
             emoji = "☀️";
-          } else if (currentHour >= 12 && currentHour < 18) {
+          } else if (currentHour >= 12 && currentHour < 17) {
             greeting = "Good Afternoon";
             emoji = "🌞";
-          } else if (currentHour >= 18 && currentHour < 21) {
+          } else if (currentHour >= 17 && currentHour < 21) {
             greeting = "Good Evening";
             emoji = "🌇";
           } else {
@@ -60,17 +60,17 @@ const Profile = () => {
             emoji = "🌙";
           }
 
-          // Show the toast with the user's last name, bottom-right corner, larger size
+        
           toast(`Hi 👋! ${greeting}, ${response.data.user[0].lastName}! ${greeting2} ${emoji}`, {
             position: "bottom-right",
-            icon: null, // No icon at the start
+            icon: null, 
             style: {
-              padding: '12px',         // Reduced padding
-              fontSize: '16px',        // Smaller text
-              backgroundColor: '#6c757d', // Updated background color
-              color: '#f8f9fa',        // Updated text color
-              borderRadius: '8px',     // Rounded corners
-              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Shadow for better UI
+              padding: '12px',        
+              fontSize: '16px',        
+              backgroundColor: '#6c757d', 
+              color: '#f8f9fa',     
+              borderRadius: '8px',   
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
             },
           });
         } else {

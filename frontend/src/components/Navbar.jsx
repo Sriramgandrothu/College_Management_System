@@ -2,6 +2,7 @@ import React from "react";
 import { FiLogOut } from "react-icons/fi";
 import { useLocation, useNavigate } from "react-router-dom";
 import { RxDashboard } from "react-icons/rx";
+import ECE_LOGO from "../assests/ECE_LOGO.png"
 
 const Navbar = () => {
   const router = useLocation();
@@ -9,8 +10,13 @@ const Navbar = () => {
   return (
     <div className="shadow-md px-6 py-4">
       <div className="max-w-6xl flex justify-between items-center mx-auto">
+      <img
+              src={ECE_LOGO}
+              alt="College Logo 2"
+              className="w-11 h-11" // Adjust size as needed
+      />
         <p
-          className="font-semibold text-2xl flex justify-center items-center cursor-pointer"
+          className="font-semibold text-2xl flex justify-center items-center cursor-pointer mt-2"
           onClick={() => navigate("/")}
         >
           <span className="mr-2">

@@ -209,14 +209,7 @@ const AddFaculty = () => {
           value={data.department}
           onChange={(e) => setData({ ...data, department: e.target.value })}
         >
-          <option defaultValue>-- Select --</option>
-          {branch?.map((branch) => {
-            return (
-              <option value={branch.name} key={branch.name}>
-                {branch.name}
-              </option>
-            );
-          })}
+          <option value="ece">ECE</option>
         </select>
       </div>
       <div className="w-[40%]">

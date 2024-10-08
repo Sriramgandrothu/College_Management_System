@@ -7,7 +7,45 @@ import Notice from "../../components/Notice";
 import Material from "./Material";
 import { Toaster } from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
+import { FiLogIn, FiInfo, FiX } from "react-icons/fi";
+
+const InfoModal = ({ isOpen, onClose }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="absolute bottom-20 right-6 bg-white p-6 rounded-lg shadow-lg w-[320px] z-50 border border-blue-400">
+      <div className="flex justify-between items-center">
+        <p className="font-bold text-xl text-blue-600">Project Team</p>
+        <FiX
+          className="text-gray-500 cursor-pointer w-6 h-6"
+          onClick={onClose}
+        />
+      </div>
+      <div className="mt-4">
+        <p className="font-bold text-lg text-gray-700 underline">Under the Guidance of</p>
+        <p className="text-base text-gray-600">
+          Dr.B.Sanjay <sub><i>M.Tech, PhD</i></sub>
+        </p>
+      </div>
+      <div className="mt-6">
+        <p className="font-bold text-lg text-gray-700 underline">Project Associates</p>
+        <ul className="mt-2 space-y-2">
+          <li className="text-base text-gray-600">A.Satish <sub><i>21B91A0409</i></sub></li>
+          <li className="text-base text-gray-600">G.S.S.S.Sriram <sub><i>21B91A0454</i></sub></li>
+          <li className="text-base text-gray-600">G.Jayanth <sub><i>21B91A0474</i></sub></li>
+          <li className="text-base text-gray-600">D.Damodhar <sub><i>21B91A0449</i></sub></li>
+        </ul>
+      </div>
+      <div className="mt-4">
+        <p className="text-base text-gray-600 font-bold text-center">" 2021-2025 ECE Batch "</p>
+      </div>
+    </div>
+  );
+};
+
 const Home = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [selectedMenu, setSelectedMenu] = useState("My Profile");
   const router = useLocation();
   const navigate = useNavigate();
@@ -85,6 +123,15 @@ const Home = () => {
         </>
       )}
       <Toaster position="bottom-center" />
+      <div className="fixed bottom-4 right-4 cursor-pointer">
+        <div
+          className="bg-blue-500 p-2 rounded-lg flex items-center justify-center"
+          onClick={() => setIsModalOpen(!isModalOpen)}
+        >
+          <FiInfo className="w-5 h-5 text-white" /> {/* Reduced size */}
+        </div>
+      </div>
+        <InfoModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );
 };

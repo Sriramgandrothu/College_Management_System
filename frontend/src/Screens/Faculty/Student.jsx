@@ -4,8 +4,9 @@ import Heading from "../../components/Heading";
 import axios from "axios";
 import { baseApiURL } from "../../baseUrl";
 import { FiSearch } from "react-icons/fi";
+
 const Student = () => {
-  const [search, setSearch] = useState();
+  const [search, setSearch] = useState("");
   const [data, setData] = useState({
     enrollmentNo: "",
     firstName: "",
@@ -17,10 +18,13 @@ const Student = () => {
     branch: "",
     gender: "",
     profile: "",
+    internal: {},
+    external: {},
   });
   const [id, setId] = useState();
 
   const searchStudentHandler = (e) => {
+    e.preventDefault();
     setId("");
     setData({
       enrollmentNo: "",
@@ -33,12 +37,15 @@ const Student = () => {
       branch: "",
       gender: "",
       profile: "",
+      internal: {},
+      external: {},
     });
-    e.preventDefault();
     toast.loading("Getting Student");
     const headers = {
       "Content-Type": "application/json",
     };
+
+    // Fetch student details
     axios
       .post(
         `${baseApiURL()}/student/details/getDetails`,
@@ -49,32 +56,44 @@ const Student = () => {
         toast.dismiss();
         if (response.data.success) {
           if (response.data.user.length === 0) {
-            toast.dismiss();
             toast.error("No Student Found!");
           } else {
-            toast.success(response.data.message);
+            const student = response.data.user[0];
             setData({
-              enrollmentNo: response.data.user[0].enrollmentNo,
-              firstName: response.data.user[0].firstName,
-              middleName: response.data.user[0].middleName,
-              lastName: response.data.user[0].lastName,
-              email: response.data.user[0].email,
-              phoneNumber: response.data.user[0].phoneNumber,
-              semester: response.data.user[0].semester,
-              branch: response.data.user[0].branch,
-              gender: response.data.user[0].gender,
-              profile: response.data.user[0].profile,
+              enrollmentNo: student.enrollmentNo,
+              firstName: student.firstName,
+              middleName: student.middleName,
+              lastName: student.lastName,
+              email: student.email,
+              phoneNumber: student.phoneNumber,
+              semester: student.semester,
+              branch: student.branch,
+              gender: student.gender,
+              profile: student.profile,
+              internal: {},
+              external: {},
             });
-            setId(response.data.user[0]._id);
+            setId(student._id);
+
+            // Fetch marks
+            return axios.post(`${baseApiURL()}/marks/getMarks`, { enrollmentNo: student.enrollmentNo }, { headers });
           }
         } else {
-          toast.dismiss();
           toast.error(response.data.message);
+        }
+      })
+      .then((response) => {
+        if (response.data.length !== 0) {
+          setData((prevData) => ({
+            ...prevData,
+            internal: response.data.Mark[0].internal,
+            external: response.data.Mark[0].external,
+          }));
         }
       })
       .catch((error) => {
         toast.dismiss();
-        toast.error(error.response.data.message);
+        toast.error(error.response?.data?.message || "An error occurred");
         console.error(error);
       });
   };
@@ -129,6 +148,41 @@ const Student = () => {
               alt="student profile"
               className="h-[200px] w-[200px] object-cover rounded-lg shadow-md"
             />
+          </div>
+        )}
+
+        {id && (data.internal || data.external) && (
+          <div className="w-full mt-10 bg-gray-50 p-6 rounded-md shadow-md">
+            <h2 className="text-xl font-semibold mb-4">Marks</h2>
+            {data.internal && (
+              <div className="mb-4">
+                <p className="border-b-2 border-red-500 text-lg font-semibold pb-2">
+                  Internal Marks (Out of 30)
+                </p>
+                {Object.keys(data.internal).map((item, index) => (
+                  <div key={index} className="flex justify-between text-lg mt-2">
+                    <p>{item}</p>
+                    <span>{data.internal[item]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {data.external && (
+              <div>
+                <p className="border-b-2 border-red-500 text-lg font-semibold pb-2">
+                  External Marks (Out of 70)
+                </p>
+                {Object.keys(data.external).map((item, index) => (
+                  <div key={index} className="flex justify-between text-lg mt-2">
+                    <p>{item}</p>
+                    <span>{data.external[item]}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+            {(!data.internal && !data.external) && (
+              <p>No Marks Available At The Moment!</p>
+            )}
           </div>
         )}
       </div>

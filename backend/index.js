@@ -15,7 +15,7 @@ app.use(cors({
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello 👋 I am Working Fine 🚀");
 });
 
@@ -38,6 +38,7 @@ app.use("/api/notice", require("./routes/Other Api/notice.route"));
 app.use("/api/subject", require("./routes/Other Api/subject.route"));
 app.use("/api/marks", require("./routes/Other Api/marks.route"));
 app.use("/api/branch", require("./routes/Other Api/branch.route"));
+app.get("/hello");
 
 // Start the server
 app.listen(port, () => {

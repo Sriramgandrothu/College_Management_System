@@ -81,7 +81,7 @@ const Login = () => {
         "Content-Type": "application/json",
       };
       axios
-        .post(`${baseApiURL()}/${selected.toLowerCase()}/auth/login`, data, { headers: headers })
+        .post(`${baseApiURL()}/${selected.toLowerCase()}/auth/login`, data, { headers })
         .then((response) => {
           navigate(`/${selected.toLowerCase()}`, {
             state: { type: selected, loginid: response.data.loginid },
@@ -90,8 +90,9 @@ const Login = () => {
         .catch((error) => {
           toast.dismiss();
           console.error(error);
-          toast.error(error.response.data.message);
+          toast.error(error.response?.data?.message || "Login failed");
         });
+
     }
   };
 

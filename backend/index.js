@@ -10,7 +10,7 @@ const port = process.env.PORT || 5000;
 
 // CORS Configuration
 app.use(cors({
-  origin: process.env.FRONTEND_API_LINK || 'http://localhost:3000'
+  origin: process.env.FRONTEND_API_LINK || 'https://ecemanagementsystem.vercel.app/'
 }));
 
 app.use(express.json());
